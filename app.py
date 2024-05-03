@@ -6,19 +6,31 @@ from func import *
 
 #os.environ['HUGGINGFACEHUB_API_TOKEN'] = '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'
 
+#декоратор для загрузки моделей в кэш
+@st.cache
+def load_model_enciclopedic():
 #модели для проверки энциклопедичности
-tokenizer_enciclopedic = BertTokenizer.from_pretrained("bert-base-multilingual-cased")
-model_enciclopedic = BertForSequenceClassification.from_pretrained("bert-base-multilingual-cased", num_labels=2)
-if torch.cuda.is_available():
-    model_enciclopedic.cuda()
-prompt = "Учитывая следующий текст, определите, написан ли он в энциклопедическом стиле:\n\nТекст:"
-prompt_wiki = "Учитывая следующий текст, определите, соответствует ли он MediaWiki разметке:\n\nТекст:"
+    tokenizer_enciclopedic = BertTokenizer.from_pretrained("bert-base-multilingual-cased")
+    model_enciclopedic = BertForSequenceClassification.from_pretrained("bert-base-multilingual-cased", num_labels=2)
+    if torch.cuda.is_available():
+        model_enciclopedic.cuda()
+    prompt = "Учитывая следующий текст, определите, написан ли он в энциклопедическом стиле:\n\nТекст:"
+    prompt_wiki = "Учитывая следующий текст, определите, соответствует ли он MediaWiki разметке:\n\nТекст:"
+    return tokenizer_enciclopedic, model_enciclopedic, prompt, prompt_wiki
 
+tokenizer_enciclopedic, model_enciclopedic, prompt, prompt_wiki = load_model_enciclopedic()
+
+
+@st.cache
+def load_model_neutrality():
 #модели для проверки нейтральности
-tokenizer_neutrality = AutoTokenizer.from_pretrained('cointegrated/rubert-tiny-sentiment-balanced')
-model_neutrality = AutoModelForSequenceClassification.from_pretrained('cointegrated/rubert-tiny-sentiment-balanced')
-if torch.cuda.is_available():
-    model_neutrality.cuda()
+    tokenizer_neutrality = AutoTokenizer.from_pretrained('cointegrated/rubert-tiny-sentiment-balanced')
+    model_neutrality = AutoModelForSequenceClassification.from_pretrained('cointegrated/rubert-tiny-sentiment-balanced')
+    if torch.cuda.is_available():
+        model_neutrality.cuda()
+    return tokenizer_neutrality, model_neutrality
+
+tokenizer_neutrality, model_neutrality =  load_model_neutrality()
 
 
 #Загрузка и очистка данных
@@ -27,7 +39,7 @@ data = st.text_area('Введите текcт', 'text input')
 clean_data = clean_up(str(data))
 
 option = st.selectbox('Выберите проверку',
-    ('Энциклопедичность', 'Соответствие Wiki разметке', 'Исправление ошибок', 'Нейтральность', 'Плагиат'))
+    ('', 'Энциклопедичность', 'Соответствие Wiki разметке', 'Исправление ошибок', 'Нейтральность', 'Плагиат'))
 
 if option == 'Энциклопедичность':
     enciclopedic=enciclopedic(data, tokenizer_enciclopedic, model_enciclopedic, prompt)
@@ -56,6 +68,9 @@ elif option == 'Нейтральность':
 elif option == 'Плагиат':
     plagiarism = plagiarism(clean_data)
     st.write(plagiarism)
+
+else:
+    st.write('Не выбрана ни одна проверка!!')
 
 
 
