@@ -6,31 +6,32 @@ from func import *
 
 #os.environ['HUGGINGFACEHUB_API_TOKEN'] = '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'
 
-#декоратор для загрузки моделей в кэш
-@st.cache
-def load_model_enciclopedic():
 #модели для проверки энциклопедичности
-    tokenizer_enciclopedic = BertTokenizer.from_pretrained("bert-base-multilingual-cased")
+tokenizer_enciclopedic = BertTokenizer.from_pretrained("bert-base-multilingual-cased")
+#декоратор для загрузки модели в кэш
+@st.cache_resource
+def load_model_enciclopedic():
     model_enciclopedic = BertForSequenceClassification.from_pretrained("bert-base-multilingual-cased", num_labels=2)
     if torch.cuda.is_available():
         model_enciclopedic.cuda()
-    prompt = "Учитывая следующий текст, определите, написан ли он в энциклопедическом стиле:\n\nТекст:"
-    prompt_wiki = "Учитывая следующий текст, определите, соответствует ли он MediaWiki разметке:\n\nТекст:"
-    return tokenizer_enciclopedic, model_enciclopedic, prompt, prompt_wiki
+    return model_enciclopedic
 
-tokenizer_enciclopedic, model_enciclopedic, prompt, prompt_wiki = load_model_enciclopedic()
+model_enciclopedic = load_model_enciclopedic()
+
+prompt = "Учитывая следующий текст, определите, написан ли он в энциклопедическом стиле:\n\nТекст:"
+prompt_wiki = "Учитывая следующий текст, определите, соответствует ли он MediaWiki разметке:\n\nТекст:"
 
 
-@st.cache
-def load_model_neutrality():
 #модели для проверки нейтральности
-    tokenizer_neutrality = AutoTokenizer.from_pretrained('cointegrated/rubert-tiny-sentiment-balanced')
+tokenizer_neutrality = AutoTokenizer.from_pretrained('cointegrated/rubert-tiny-sentiment-balanced')
+@st.cache_resource
+def load_model_neutrality():
     model_neutrality = AutoModelForSequenceClassification.from_pretrained('cointegrated/rubert-tiny-sentiment-balanced')
     if torch.cuda.is_available():
         model_neutrality.cuda()
-    return tokenizer_neutrality, model_neutrality
+    return model_neutrality
 
-tokenizer_neutrality, model_neutrality =  load_model_neutrality()
+model_neutrality =  load_model_neutrality()
 
 
 #Загрузка и очистка данных
