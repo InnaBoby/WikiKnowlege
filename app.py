@@ -4,7 +4,6 @@ from pyaspeller import YandexSpeller
 from transformers import AutoTokenizer, AutoModelForSequenceClassification, AutoModelForCausalLM
 from func import *
 
-#os.environ['HUGGINGFACEHUB_API_TOKEN'] = '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'
 
 #модели для проверки энциклопедичности
 tokenizer_enciclopedic = BertTokenizer.from_pretrained("bert-base-multilingual-cased")
