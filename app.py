@@ -56,6 +56,7 @@ elif option == 'Исправление ошибок':
         st.write('Нет ошибок')
     else:
         st.markdown(':red[Статья содержит ошибки]')
+        st.write(f'Исправлены слова: :blue[{set(clean_data.split( )) - set(data_correct.split( ))}]')
         st.text_area('Исправленный текст:', data_correct)
 
 
