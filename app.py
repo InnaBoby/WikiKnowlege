@@ -55,7 +55,9 @@ elif option == 'Исправление ошибок':
     if clean_data == data_correct:
         st.write('Нет ошибок')
     else:
-        st.write('Статья содержит ошибки')
+        st.markdown(':red[Статья содержит ошибки]')
+        mistakes = [x for x in set(clean_data) if x not in set(data_correct) else pass]
+        st.write(f'Исправлены слова: :blue[{print(*mistakes)}]')
 
 
 elif option == 'Нейтральность':
