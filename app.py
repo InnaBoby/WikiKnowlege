@@ -52,7 +52,7 @@ elif option == 'Соответствие Wiki разметке':
 elif option == 'Исправление ошибок':
     speller = YandexSpeller()
     data_correct = speller.spelled(clean_data)
-    if set(clean_data) == set(data_correct):
+    if clean_data == data_correct:
         st.write('Нет ошибок')
     else:
         st.markdown(':red[Статья содержит ошибки]')
