@@ -43,11 +43,17 @@ option = st.selectbox('Выберите проверку',
 
 if option == 'Энциклопедичность':
     enciclopedic=enciclopedic(data, tokenizer_enciclopedic, model_enciclopedic, prompt)
-    st.write(enciclopedic)
+    if enciclopedic =='Текст написан в энциклопедическом стиле':
+        st.write(f':green[{enciclopedic}]')
+    else:
+        st.write(f':red[{enciclopedic}]')
 
 elif option == 'Соответствие Wiki разметке':
     wiki = MediaWiki_text_style(data, tokenizer_enciclopedic, model_enciclopedic, prompt_wiki)
-    st.write(wiki)
+    if wiki == 'Текст соответствует MediaWiki разметке':
+        st.write(f':green[{wiki}]')
+    else:
+        st.write(f':red[{wiki}]')
 
 elif option == 'Исправление ошибок':
     speller = YandexSpeller()
