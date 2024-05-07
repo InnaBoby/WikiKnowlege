@@ -59,7 +59,7 @@ elif option == 'Исправление ошибок':
     speller = YandexSpeller()
     data_correct = speller.spelled(clean_data)
     if clean_data == data_correct:
-        st.write('Нет ошибок')
+        st.write(':green[Нет ошибок]')
     else:
         st.markdown(':red[Статья содержит ошибки]')
         st.write(f'Исправлены слова: :blue[{set(clean_data.split( )) - set(data_correct.split( ))}]')
